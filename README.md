@@ -8,4 +8,4 @@ NOTE:
 2. The CSV sheet exported would include special characters. As of the current iteration, the special characters aren't cleaned up
 3. The 'Total Likes' column is in string format and not int.
 
-NOTE : A better way to gather the data is to use the API provided by YouTube. The only drawback to it is that the API key you create must be run every 90 days or else YouTube will make it invalid.
+NOTE : After sharing this code I've been made aware that a better way to gather the data is to use the API provided by YouTube. The only drawback to it is that the API key you create must be run every 90 days or else YouTube will make it invalid.
