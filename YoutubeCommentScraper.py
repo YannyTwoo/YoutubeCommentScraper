@@ -78,9 +78,11 @@ try:
     driver.quit()
 
     # zipping all the lists into one dataframe and then exporting it into CSV format. Data cleaning of emojis ,etc to be added
-    df = pd.DataFrame(list(zip(CommenteeNameList, CommentFullList, TimeAgoList, TotLikesList)) , columns = ['Commenter' , 'Comment' , 'Time Ago', 'Total Likes'])
+    df = pd.DataFrame(list(zip(CommenteeNameList, CommentFullList, TimeAgoList, TotLikesList)) , columns = ['Commenter' , 'Comment' , 'Time_Ago', 'Total_Likes'])
     print('Dataframe completed\n')
     df2 = df.drop(index=[0], axis=0)
+    df2["Total Likes"] = df["Total Likes"].str.replace('K','00')
+    df2["Total Likes"] = df["Total Likes"].str.replace('.','')
     df2.to_csv("YoutubeComments.csv" , index =False)
     print('Success!')
 except Exception as e:
