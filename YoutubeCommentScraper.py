@@ -19,15 +19,19 @@ def cleanComz(inpString):
     return a
 
 def checkEnoughComz(number):
-    if(number <= 59):
+    if(number <= 80):
         return 4
     else:
-        return number/20
+        return number//20
+def cleanFinComz(lista):
+    for listitem in lista:
+        listitem = listitem.replace('"' , '')
+    return lista
 
 CommenteeNameList, TotLikesList, TimeAgoList =  [],[],[]
 CommentFullList =[]
 
-webURL = 'https://www.youtube.com/watch?v=rqeCzp4c1Zg'
+webURL = 'https://www.youtube.com/watch?v=58vFqe3tYEc'
 try:
     #Using Firefox as the browser is recommended.
     driver = webdriver.Firefox(executable_path = r'C:\Program Files\Selenium Drivers 64\geckodriver.exe')
@@ -55,11 +59,12 @@ try:
     ele.send_keys(Keys.PAGE_DOWN)
     time.sleep(random.randint(4,8))
 
-    totalcomments =driver.find_element_by_xpath('//*[@id="count"]/yt-formatted-string').text
-    totalcomments = checkEnoughComz(int((cleanComz(totalcomments))))
+    totalcomments = driver.find_element_by_xpath('//*[@id="count"]/yt-formatted-string').text
+    commentloops = checkEnoughComz(int((cleanComz(totalcomments))))
+    print('total loops :' , commentloops , '\n')
     print('Searching for tags\n')
     #Loop to scroll to the bottom and load all comments
-    for i in range(int(round(totalcomments/20))):
+    for i in range(int(round(commentloops))):
         ele.send_keys(Keys.END)
         time.sleep(random.randint(1,5))
 
@@ -76,13 +81,12 @@ try:
         TimeAgoList.append(time_ago[a].text)
         TotLikesList.append(likes[a].text)
     driver.quit()
-
+    CommentFullList = cleanFinComz(CommentFullList)
+    # TotLikesList2 = [int(x) for x in TotLikesList]
     # zipping all the lists into one dataframe and then exporting it into CSV format. Data cleaning of emojis ,etc to be added
-    df = pd.DataFrame(list(zip(CommenteeNameList, CommentFullList, TimeAgoList, TotLikesList)) , columns = ['Commenter' , 'Comment' , 'Time_Ago', 'Total_Likes'])
+    df = pd.DataFrame(list(zip(CommenteeNameList, CommentFullList, TimeAgoList, TotLikesList)) , columns = ['Commenter' , 'Comment' , 'Time Ago', 'Total Likes'])
     print('Dataframe completed\n')
     df2 = df.drop(index=[0], axis=0)
-    df2["Total Likes"] = df["Total Likes"].str.replace('K','00')
-    df2["Total Likes"] = df["Total Likes"].str.replace('.','')
     df2.to_csv("YoutubeComments.csv" , index =False)
     print('Success!')
 except Exception as e:
